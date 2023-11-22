@@ -30,6 +30,8 @@ namespace Saga
                 .Sagas(s => s.StoreInPostgres(connectionString, "sagas", "saga_indexes")));
 
 
+            builder.Services.AutoRegisterHandlersFromAssemblyOf<Program>();
+
 
             var app = builder.Build();
 
