@@ -27,7 +27,7 @@ namespace Saga
                     r.TypeBased().MapAssemblyOf<Program>("saga-queue"))
                 .Transport(tr =>
                     tr.UseRabbitMq(messgaeBroakerConnectionString, "saga-queue"))
-                .Sagas(s => s.StoreInSqlServer(connectionString, "sagas", "saga_indexes")));
+                .Sagas(s => s.StoreInPostgres(connectionString, "sagas", "saga_indexes")));
 
 
 
