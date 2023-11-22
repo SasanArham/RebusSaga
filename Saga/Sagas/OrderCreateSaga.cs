@@ -3,6 +3,7 @@ using Rebus.Handlers;
 using Rebus.Sagas;
 using Saga.Commands;
 using Saga.Events;
+using Serilog;
 
 namespace Saga.Sagas
 {
@@ -39,17 +40,24 @@ namespace Saga.Sagas
 
         public async Task Handle(StepOneProcessedEvent message)
         {
+            Log.Information("Step one processed");
+            Data.State = "Step one processed";
             await _bus.Send(new StartStepTwoCommand { OrderID = Data.Id });
         }
 
         public async Task Handle(StepTwoProcessedEvent message)
         {
+            Log.Information("Step two processed");
+            Data.State = "Step two processed";
             await _bus.Send(new StartStepThreeCommand { OrderID = Data.Id });
         }
 
-        public async Task Handle(StepThreeProcessedEvent message)
+        public Task Handle(StepThreeProcessedEvent message)
         {
-            throw new NotImplementedException();
+            Data.State = "Step three processed";
+            Log.Information("Step three processed");
+            MarkAsComplete();
+            return Task.CompletedTask;
         }
     }
 }
