@@ -1,5 +1,6 @@
 
 using Rebus.Config;
+using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using System.Reflection;
 
@@ -20,14 +21,15 @@ namespace Saga
 
 
             var messgaeBroakerConnectionString = builder.Configuration.GetConnectionString("MessageBroaker");
-            var connectionString = builder.Configuration.GetConnectionString("connectionstring");
+            //var connectionString = builder.Configuration.GetConnectionString("connectionstring");
 
             builder.Services.AddRebus(rebus => rebus
                 .Routing(r =>
                     r.TypeBased().MapAssemblyOf<Program>("saga-queue"))
                 .Transport(tr =>
                     tr.UseRabbitMq(messgaeBroakerConnectionString, "saga-queue"))
-                .Sagas(s => s.StoreInPostgres(connectionString, "sagas", "saga_indexes")));
+                .Sagas(s => s.StoreInMemory())
+                );
 
 
             builder.Services.AutoRegisterHandlersFromAssemblyOf<Program>();
